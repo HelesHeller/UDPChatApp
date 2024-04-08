@@ -5,10 +5,14 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
+
 namespace UDPChatApp
 {
     public partial class MainForm : Form
     {
+
+        private string nickname;
+
         // Параметры сервера
         private const int serverPort = 12345;
         private const string serverIP = "26.129.29.176";
@@ -16,11 +20,13 @@ namespace UDPChatApp
         private UdpClient client;
         private IPEndPoint serverEndPoint;
 
-        public MainForm()
+        public MainForm(string nickname)
         {
             InitializeComponent();
             client = new UdpClient();
             serverEndPoint = new IPEndPoint(IPAddress.Parse(serverIP), serverPort);
+            this.nickname = nickname;
+
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -58,13 +64,18 @@ namespace UDPChatApp
         // Обработчик события нажатия на кнопку отправки сообщения
         private void buttonSend_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(textBoxMessage.Text))
+            if (!string.IsNullOrEmpty(textBoxMessage.Text) && !string.IsNullOrEmpty(nickname))
             {
-                string userName = textBoxName.Text;
-                string message = $"{userName}: {textBoxMessage.Text}";
+                string message = $"{nickname}: {textBoxMessage.Text}"; // Сообщение с никнеймом пользователя
                 SendMessage(message);
                 textBoxMessage.Clear();
             }
+            else
+            {
+                MessageBox.Show("Введите сообщение или проверьте наличие никнейма!");
+            }
         }
+
+
     }
 }
